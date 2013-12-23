@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+function _errusage
+{
+	printf "Usage: holidaytree HEIGHT BASECHAR TREECHAR\nWhere:
+	HEIGHT is between 3 and 21 inclusive and is odd,\n
+	and BASECHAR and TREECHAR are single characters.\n"
+	exit 1;
+}
+
+if [[ $# != 3 ]]; then
+	_errusage
+fi
+
+num_rows="$1"
+basechar="$2"
+treechar="$3"
+validnum=^[0-9]+$
+
+if [[ !($num_rows =~ $validnum) || 
+	$num_rows -lt 3 || $num_rows -gt 21 ||
+		$((num_rows % 2)) -ne 1 ]]; then
+	_errusage
+fi
+
+tree_num_rows=$((num_rows - 1))
+final_row_width=$((tree_num_rows * 2 - 1))
+
+for (( i=0; i < tree_num_rows; i++ )); do
+	padding=$(( final_row_width / 2 - i ))
+	row_width=$(( i * 2 + 1 ))
+	for (( j=0; j < padding; j++ )); do
+		printf ' '
+	done
+	for (( j=0; j < row_width; j++ )); do
+		printf $treechar
+	done
+	printf '\n'
+done
+
+bottom_padding=$(( (final_row_width - 3) / 2 ))
+for (( i=0; i < bottom_padding; i++ )); do
+	printf ' '
+done
+
+for i in {1..3}; do
+	printf $basechar
+done
+
+printf '\n'
+
+exit 0
